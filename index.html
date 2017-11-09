@@ -21,7 +21,7 @@
 
     <script type="text/javascript">
 
-    var game = new Phaser.Game(448, 496, Phaser.AUTO);
+    var game = new Phaser.Game(465, 520, Phaser.AUTO);
 
     var Pacman = function (game) {
 
@@ -34,6 +34,8 @@
 
         this.speed = 150;
         this.threshold = 3;
+        this.score = 0;
+        this.scoreText = "Score: 0";
 
         this.marker = new Phaser.Point();
         this.turnPoint = new Phaser.Point();
@@ -71,6 +73,7 @@
             this.load.image('tiles', 'assets/pacman-tiles.png');
             this.load.spritesheet('pacman', 'assets/flowerpacman.png', 32, 32);
             this.load.tilemap('map', 'assets/pacman_level1.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.audio('sound', 'assets/bump.mp3');
 
             //  Needless to say, graphics (C)opyright Namco
 
@@ -106,6 +109,13 @@
 
             this.pacman.play('munch');
             this.move(Phaser.LEFT);
+            
+            this.scoreText = game.add.text(0, 500, 'SCORE: 0', {
+                font: 'arial',
+                fontSize: '24px',
+                fill: 'white'
+            }
+                                           );
 
         },
 
@@ -226,6 +236,9 @@
         eatDot: function (pacman, dot) {
 
             dot.kill();
+            this.sound.play('sound');
+            this.score = this.score + 1;
+            this.scoreText.text = 'SCORE: ' + this.score;
 
             if (this.dots.total === 0)
             {
